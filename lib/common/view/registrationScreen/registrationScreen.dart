@@ -15,8 +15,7 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController nameController = TextEditingController();
-  TextEditingController mobileController =
-      TextEditingController(text: '093973138');
+  TextEditingController mobileController = TextEditingController(text: '');
   TextEditingController emailController = TextEditingController();
   TextEditingController vehicleModelNameController = TextEditingController();
   TextEditingController vehicleBrandNameController = TextEditingController();
@@ -42,8 +41,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    nameController.text == auth.currentUser!.phoneNumber!;
-    mobileController.text = '+855';
+    if (auth.currentUser != null && auth.currentUser!.phoneNumber != null) {
+      nameController.text = auth.currentUser!.phoneNumber!;
+    }
+    // nameController.text == auth.currentUser!.phoneNumber!;
+    mobileController.text = '+911234567890';
   }
 
   @override
@@ -58,7 +60,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     driverLicenseNumberController.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -72,32 +73,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               child: CircleAvatar(
                 radius: 8.h,
                 backgroundColor: greyShade3,
-                child: Builder(
-                  builder: (context) {
-                    if (profilePic != null) {
-                      return CircleAvatar(
-                        radius: (8.h - 2),
-                        backgroundColor: white,
-                        backgroundImage: FileImage(profilePic!),
-                      );
-                    } else {
-                      return CircleAvatar(
-                        radius: (8.h - 2),
-                        backgroundColor: white,
-                        child: const Image(
-                          image: AssetImage(
-                            'assets/images/uberLogo/uberLogoBlack.png',
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Builder(
+                    builder: (context) {
+                      if (profilePic != null) {
+                        return CircleAvatar(
+                          radius: (8.h - 2),
+                          backgroundColor: white,
+                          backgroundImage: FileImage(profilePic!),
+                        );
+                      } else {
+                        return CircleAvatar(
+                          radius: (8.h - 2),
+                          backgroundColor: white,
+                          child: const Image(
+                            image: AssetImage(
+                              'assets/images/uberLogo/uberLogoBlack.png',
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  },
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             ),
-            SizedBox(
-              height: 4.h,
-            ),
+
             RegistrationScreenTextField(
               controller: nameController,
               title: 'Name',
@@ -105,9 +107,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               readOnly: false,
               keyBoardType: TextInputType.name,
             ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             RegistrationScreenTextField(
               controller: mobileController,
               title: 'Mobile Number',
@@ -120,9 +120,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               readOnly: false,
               keyBoardType: TextInputType.phone,
             ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             RegistrationScreenTextField(
               controller: emailController,
               title: 'Email',
@@ -130,14 +128,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               readOnly: false,
               keyBoardType: TextInputType.emailAddress,
             ),
-            SizedBox(
-              height: 4.h,
-            ),
+            SizedBox(height: 4.h),
             selectUserType('Customer'),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             selectUserType('Partner'),
+            SizedBox(height: 2.h),
             Builder(builder: (context) {
               if (userType == 'Partner') {
                 return partner();
@@ -179,9 +174,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               size: 2.h,
             ),
           ),
-          SizedBox(
-            width: 3.w,
-          ),
+          SizedBox(width: 3.w),
           Text(
             'Continue as $updateUserType',
             style: AppTextStyles.small10.copyWith(
@@ -206,7 +199,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           width: 94.w,
           child: registerButtonPressed == true
               ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(white),
+                  color: white,
                 )
               : Text(
                   'Continue',
@@ -221,9 +214,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 2.h,
-        ),
         RegistrationScreenTextField(
           controller: vehicleBrandNameController,
           title: 'Vehicle Brand Name',
@@ -231,9 +221,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           readOnly: false,
           keyBoardType: TextInputType.name,
         ),
-        SizedBox(
-          height: 2.h,
-        ),
+        SizedBox(height: 2.h),
         RegistrationScreenTextField(
           controller: vehicleModelNameController,
           title: 'Vehicle Model',
@@ -241,38 +229,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           readOnly: false,
           keyBoardType: TextInputType.name,
         ),
-        SizedBox(
-          height: 2.h,
-        ),
-        Text('Vehicle Type', style: AppTextStyles.body14Bold),
-        Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 2.w,
-          ),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: grey,
+        SizedBox(height: 2.h),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Vehicle Type', style: AppTextStyles.body14Bold),
+            SizedBox(height: 2.h),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 2.w),
+              decoration: BoxDecoration(
+                border: Border.all(color: grey),
+                borderRadius: BorderRadius.circular(8.sp),
+              ),
+              child: DropdownButton(
+                isExpanded: true,
+                value: selectedVehicleType,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                underline: const SizedBox(),
+                items: vehicleType
+                    .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e, style: AppTextStyles.small12),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedVehicleType = value!;
+                  });
+                },
+              ),
             ),
-            borderRadius: BorderRadius.circular(8.sp),
-          ),
-          child: DropdownButton(
-            isExpanded: true,
-            value: selectedVehicleType,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            underline: const SizedBox(),
-            items: vehicleType
-                .map((e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e),
-                    ))
-                .toList(),
-            onChanged: (String? value) {
-              setState(() {
-                selectedVehicleType = value!;
-              });
-            },
-          ),
+          ],
         ),
+        SizedBox(height: 2.h),
         RegistrationScreenTextField(
           controller: vehicleRegistrationNumberController,
           title: 'Vehicle Registration Number',
@@ -293,9 +282,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         SizedBox(
           height: 2.h,
         ),
-        SizedBox(
-          height: 10.h,
-        ),
         ElevatedButtonCommon(
           onPressed: () {
             if (registerButtonPressed == false) {
@@ -308,13 +294,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           height: 6.h,
           width: 94.w,
           child: registerButtonPressed == true
-              ? CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(white),
-                )
-              : Text(
-                  'Continue',
-                  style: AppTextStyles.small12Bold.copyWith(color: white),
-                ),
+              ? CircularProgressIndicator(color: white)
+              : Text('Continue',
+                  style: AppTextStyles.small12Bold.copyWith(color: white)),
         ),
       ],
     );
@@ -351,16 +333,12 @@ class _RegistrationScreenTextFieldState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 2.h,
-        ),
+        SizedBox(height: 2.h),
         Text(
           widget.title,
           style: AppTextStyles.body14Bold,
         ),
-        SizedBox(
-          height: 1.h,
-        ),
+        SizedBox(height: 1.h),
         TextFormField(
           controller: widget.controller,
           cursorColor: black,

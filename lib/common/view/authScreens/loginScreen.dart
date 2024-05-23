@@ -19,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController mobileNumberController = TextEditingController();
-  String selectedCountryCode = '+91';
+  String selectedCountryCode = '+855';
   bool loginButtonProgress = false;
   List loginButtonData = [
     [const AssetGen().google.svg(height: 20.sp), 'Google'],
@@ -59,15 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               height: 1.h,
             ),
-            Text(
-              'Enter your phone number',
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text('Enter your phone number', style: AppTextStyles.body18),
             SizedBox(
-              height: 2.h,
+              height: 1.h,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -76,38 +70,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   onTap: () {
                     showCountryPicker(
                       context: context,
-                      showPhoneCode: true,
-                      onSelect: (Country country) {
+                      // showPhoneCode: true,
+                      onSelect: (value) {
                         setState(() {
-                          selectedCountryCode = '+${country.phoneCode}';
+                          selectedCountryCode = '+${value.phoneCode}';
                         });
                       },
                     );
                   },
                   child: Container(
                     width: 20.w,
-                    height: 7.h,
+                    height: 6.h,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: white,
+                      color: greyShade2,
                       borderRadius: BorderRadius.circular(8.sp),
                       border: Border.all(
                         color: grey,
                       ),
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          selectedCountryCode,
-                          style: AppTextStyles.textFieldTextStyle,
-                        ),
-                        Icon(
-                          Icons.arrow_drop_down,
-                          color: black,
-                        ),
-                      ],
-                    ),
+                    child: Text(selectedCountryCode),
                   ),
                 ),
                 SizedBox(
@@ -118,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: AppTextStyles.textFieldTextStyle,
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.symmetric(
-                        // vertical: 0,
+                        vertical: 0,
                         horizontal: 4.w,
                       ),
                       hintText: 'Mobile number',
@@ -152,9 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ],
             ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             ElevatedButtonCommon(
               onPressed: () {
                 login();
@@ -163,19 +143,15 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 6.h,
               width: 94.w,
               child: loginButtonProgress == true
-                  ? CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(white),
-                    )
-                  : Text('Continue',
-                      style: AppTextStyles.small12Bold.copyWith(color: white)),
+                  ? const CircularProgressIndicator()
+                  : Text(
+                      'Continue',
+                      style: AppTextStyles.small12Bold.copyWith(color: white),
+                    ),
             ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             const OrDivider(),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             ListView.builder(
               itemCount: loginButtonData.length,
               shrinkWrap: true,
@@ -205,13 +181,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               },
             ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             const OrDivider(),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -222,9 +194,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text('Find my account', style: AppTextStyles.body14),
               ],
             ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             Text(
               'By proceeding, you consent to get calls, WhatsApp or SMS messages, including by automated means, from Uber and its affiliates to the number provided.',
               style: AppTextStyles.small10.copyWith(color: grey),
@@ -235,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             RichText(
               text: TextSpan(
-                text: 'This site is protected by reCAPTCHA and the Google',
+                text: 'This site is protected by reCAPTCHA and the Google ',
                 style: AppTextStyles.small10.copyWith(color: grey),
                 children: [
                   TextSpan(
@@ -263,9 +233,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
           ],
         ),
       ),

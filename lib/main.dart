@@ -1,14 +1,15 @@
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:uber/common/view/signInLogic/signInLogin.dart';
 import 'package:uber/constant/utils/colors.dart';
 import 'package:uber/rider/controller/bottomNavBarRiderProvider/bottomNavBarRiderProvider.dart';
 import 'common/controller/provider/authProvider.dart';
-import 'common/view/authScreens/loginScreen.dart';
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -45,7 +46,7 @@ class _UserState extends State<User> {
                 elevation: 0,
               ),
             ),
-            home: const LoginScreen(),
+            home: const SignInLogic(),
           ),
         );
       },

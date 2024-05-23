@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uber/common/controller/provider/authProvider.dart';
 import 'package:uber/common/controller/sevices/mobileAuthService.dart';
 import 'package:uber/constant/utils/colors.dart';
 

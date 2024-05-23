@@ -7,16 +7,21 @@ import 'package:uber/common/view/signInLogic/signInLogin.dart';
 import 'package:uber/constant/constants.dart';
 import 'package:page_transition/page_transition.dart'; // Added this line
 import 'package:uber/rider/view/bottomNavBar/bottomNavBarRider.dart';
-import 'package:uber/rider/view/homeScreen/riderHomeScreen.dart';
 import '../../view/authScreens/otpScreen.dart';
 import '../provider/authProvider.dart';
+
+final _firebaseAuth = FirebaseAuth.instance;
+String? _verificationId;
 
 class MobileAuthService {
   static receiveOTP(
       {required BuildContext context, required String mobileNumber}) async {
+    var phone = mobileNumber.substring(0, 1) == '0'
+        ? mobileNumber.substring(1)
+        : mobileNumber;
     try {
-      await auth.verifyPhoneNumber(
-        phoneNumber: mobileNumber,
+      await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: phone,
         verificationCompleted: (PhoneAuthCredential credential) {
           log(credential.toString());
         },
@@ -26,13 +31,16 @@ class MobileAuthService {
         codeSent: (String verificationCode, int? resendToken) {
           context
               .read<MobileAuthProvider>()
-              .updateMobileNumber(verificationCode);
+              .updateVerificationCode(verificationCode);
           Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.fade, child: const OTPScreen()));
+            context,
+            PageTransition(
+              type: PageTransitionType.fade,
+              child: const OTPScreen(),
+            ),
+          );
         },
-        codeAutoRetrievalTimeout: (String verificationId) {},
+        codeAutoRetrievalTimeout: (String verificationID) {},
       );
     } catch (e) {
       throw Exception(e.toString());
@@ -41,18 +49,17 @@ class MobileAuthService {
 
   static verifyOTP({required BuildContext context, required String otp}) async {
     try {
-      PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+      final credential = PhoneAuthProvider.credential(
         verificationId: context.read<MobileAuthProvider>().verificationCode!,
         smsCode: otp,
       );
-      await auth.signInWithCredential(phoneAuthCredential);
-      Navigator.pushAndRemoveUntil(
+      await _firebaseAuth.signInWithCredential(credential);
+      Navigator.push(
         context,
         PageTransition(
-          child: const RiderHomeScreen(),
           type: PageTransitionType.rightToLeft,
+          child: const SignInLogic(),
         ),
-        (route) => false,
       );
     } catch (e) {
       throw Exception(e.toString());

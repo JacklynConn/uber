@@ -18,9 +18,11 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   int num = 60;
-  TextEditingController otpController = TextEditingController();
+  late TextEditingController otpController;
+  final _form = GlobalKey<FormState>();
   StreamController<ErrorAnimationType> errorController =
       StreamController<ErrorAnimationType>();
+  String otp = '';
 
   decreaseNum() {
     if (num > 0) {
@@ -46,7 +48,7 @@ class _OTPScreenState extends State<OTPScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    otpController.dispose();
+    otpController = TextEditingController();
   }
 
   @override
@@ -59,7 +61,9 @@ class _OTPScreenState extends State<OTPScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ElevatedButtonCommon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 backgroundColor: white,
                 borderRadius: 50.sp,
                 height: 6.h,
@@ -69,9 +73,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   color: black,
                 ),
               ),
-              SizedBox(
-                width: 2.w,
-              ),
+              SizedBox(width: 2.w),
               ElevatedButtonCommon(
                 onPressed: () {
                   MobileAuthService.verifyOTP(
@@ -106,55 +108,53 @@ class _OTPScreenState extends State<OTPScreen> {
               'Welcome',
               style: AppTextStyles.body18,
             ),
-            SizedBox(
-              height: 2.h,
-            ),
+            SizedBox(height: 2.h),
             Text(
               'Enter the 6-digit code sent to you at ${context.read<MobileAuthProvider>().mobileNumber}',
               style: AppTextStyles.small10,
             ),
-            SizedBox(
-              height: 2.h,
-            ),
-            PinCodeTextField(
-              appContext: context,
-              length: 6,
-              obscureText: false,
-              animationType: AnimationType.fade,
-              textStyle: AppTextStyles.body14,
-              pinTheme: PinTheme(
-                shape: PinCodeFieldShape.box,
-                borderRadius: BorderRadius.circular(10.sp),
-                fieldHeight: 50,
-                fieldWidth: 50,
-                activeFillColor: white,
-                inactiveColor: greyShade3,
-                inactiveFillColor: greyShade3,
-                selectedFillColor: Colors.white,
-                selectedColor: Colors.black,
-                activeColor: black,
+            SizedBox(height: 2.h),
+            Form(
+              key: _form,
+              child: PinCodeTextField(
+                controller: otpController,
+                appContext: context,
+                length: 6,
+                keyboardType: TextInputType.number,
+                obscureText: false,
+                animationType: AnimationType.fade,
+                textStyle: AppTextStyles.body14,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(10.sp),
+                  fieldHeight: 50,
+                  fieldWidth: 50,
+                  activeFillColor: white,
+                  inactiveColor: greyShade3,
+                  inactiveFillColor: greyShade3,
+                  selectedFillColor: Colors.white,
+                  selectedColor: Colors.black,
+                  activeColor: black,
+                ),
+                animationDuration: const Duration(milliseconds: 300),
+                backgroundColor: transparent,
+                enableActiveFill: true,
+                errorAnimationController: errorController,
+                onChanged: (value) {
+                  otp = value;
+                },
+                onCompleted: (value) {
+                  MobileAuthService.verifyOTP(
+                    context: context,
+                    otp: otpController.text.trim(),
+                  );
+                },
+                beforeTextPaste: (text) {
+                  return true;
+                },
               ),
-              animationDuration: const Duration(milliseconds: 300),
-              backgroundColor: transparent,
-              enableActiveFill: true,
-              errorAnimationController: errorController,
-              controller: otpController,
-              onCompleted: (value) {
-                MobileAuthService.verifyOTP(
-                  context: context,
-                  otp: otpController.text.trim(),
-                );
-              },
-              onChanged: (value) {
-                print(value);
-              },
-              beforeTextPaste: (text) {
-                return true;
-              },
             ),
-            SizedBox(
-              height: 3.h,
-            ),
+            SizedBox(height: 3.h),
             Row(
               children: [
                 InkWell(
@@ -163,21 +163,24 @@ class _OTPScreenState extends State<OTPScreen> {
                       num = 60;
                       MobileAuthService.receiveOTP(
                         context: context,
-                        mobileNumber: context.read<MobileAuthProvider>().mobileNumber!,
+                        mobileNumber:
+                            context.read<MobileAuthProvider>().mobileNumber!,
                       );
                     }
                   },
                   child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 0.5.h,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50.sp),
                       color: greyShade3,
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
                     child: Text(
                       num > 0
-                          ? 'I did\'t receive a code (00:$num)'
-                          : 'I did\'t receive a code',
+                          ? 'I didn\'t receive a code (00:$num)'
+                          : 'I didn\'t receive a code',
                       style: AppTextStyles.small10.copyWith(
                         color: num > 1 ? black38 : black,
                       ),
