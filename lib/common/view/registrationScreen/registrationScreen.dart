@@ -2,6 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import '../../../constant/constants.dart';
+import '../../model/imageServices.dart';
+import '../../model/profileDataModel.dart';
+import '../../model/toastService.dart';
 import '/common/widgets/elevatedButtonCommon.dart';
 import '/constant/utils/colors.dart';
 import '/constant/utils/textStyles.dart';
@@ -21,7 +24,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController vehicleBrandNameController = TextEditingController();
   TextEditingController vehicleRegistrationNumberController =
       TextEditingController();
-  TextEditingController driverLicenseNumberController = TextEditingController();
+  TextEditingController drivingLicenseNumberController = TextEditingController();
 
   String selectedVehicleType = 'Select Vehicle Type';
   List<String> vehicleType = [
@@ -57,7 +60,84 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     vehicleBrandNameController.dispose();
     vehicleModelNameController.dispose();
     vehicleRegistrationNumberController.dispose();
-    driverLicenseNumberController.dispose();
+    drivingLicenseNumberController.dispose();
+  }
+
+  registerDriver() async {
+    if (profilePic == null) {
+      ToastService.sendScaffoldAlert(
+        msg: 'Select a Profile Pic',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else if (nameController.text.isEmpty) {
+      ToastService.sendScaffoldAlert(
+        msg: 'Enter your Name',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else if (mobileController.text.isEmpty) {
+      ToastService.sendScaffoldAlert(
+        msg: 'Enter your Mobile number',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else if (emailController.text.isEmpty) {
+      ToastService.sendScaffoldAlert(
+        msg: 'Enter your Email',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else if (vehicleBrandNameController.text.isEmpty) {
+      ToastService.sendScaffoldAlert(
+        msg: 'Enter the Vehicle Brand Name',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else if (vehicleModelNameController.text.isEmpty) {
+      ToastService.sendScaffoldAlert(
+        msg: 'Enter the vehicle model name',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else if (selectedVehicleType == 'Select Vehicle Type') {
+      ToastService.sendScaffoldAlert(
+        msg: 'Select a vehicle type',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else if (vehicleRegistrationNumberController.text.isEmpty) {
+      ToastService.sendScaffoldAlert(
+        msg: 'Enter vehicle registration number',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else if (drivingLicenseNumberController.text.isEmpty) {
+      ToastService.sendScaffoldAlert(
+        msg: 'Enter your Driving license number',
+        toastStatus: 'WARNING',
+        context: context,
+      );
+    } else {
+      String profilePicURL = await ImageServices.uploadImageToFirebaseStorage(
+          image: File(profilePic!.path), context: context);
+      ProfileDataModel profileData = ProfileDataModel(
+        profilePicUrl: profilePicURL,
+        name: nameController.text.trim(),
+        mobileNumber: auth.currentUser!.phoneNumber!,
+        email: emailController.text.trim(),
+        userType: 'PARTNER',
+        vehicleBrandName: vehicleBrandNameController.text.trim(),
+        vehicleModel: vehicleModelNameController.text.trim(),
+        vehicleType: selectedVehicleType,
+        vehicleRegistrationNumber:
+        vehicleRegistrationNumberController.text.trim(),
+        drivingLicenseNumber: drivingLicenseNumberController.text.trim(),
+        registeredDateTime: DateTime.now(),
+      );
+      // await ProfileDataCRUDServices.uploadDataToRealTimeDatabase(
+      //     profileData, context);
+    }
   }
 
   @override
