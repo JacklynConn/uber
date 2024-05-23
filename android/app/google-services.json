@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "645859425035",
+    "project_id": "uber-ef9c2",
+    "storage_bucket": "uber-ef9c2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645859425035:android:7812d8daf243861197400e",
+        "android_client_info": {
+          "package_name": "com.makmach.uber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvQvVi_adDrsajMpnRpk9-_DlGfRXKDM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

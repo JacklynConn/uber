@@ -9,7 +9,6 @@ FirebaseStorage storage = FirebaseStorage.instance;
 final picker = ImagePicker();
 DatabaseReference realTimeDatabaseRef = FirebaseDatabase.instance.ref();
 FirebaseAuth auth = FirebaseAuth.instance;
-PersistentTabController partnerBottomNavbarController = PersistentTabController(initialIndex: 0);
+PersistentTabController partnerBottomNavbarController =
+    PersistentTabController(initialIndex: 0);
 AudioPlayer audioPlayer = AudioPlayer();
-
-
