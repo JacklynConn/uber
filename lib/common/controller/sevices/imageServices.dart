@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uber/common/model/toastService.dart';
+import 'package:uber/common/controller/sevices/toastService.dart';
 import 'package:uuid/uuid.dart';
-import '../../constant/constants.dart';
+import '../../../constant/constants.dart';
 
 class ImageServices {
   static getImageFromGallery({required BuildContext context}) async {

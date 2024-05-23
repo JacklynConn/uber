@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uber/common/controller/sevices/profileDataCrudService.dart';
 import 'package:uber/common/view/authScreens/loginScreen.dart';
 import 'package:uber/common/view/signInLogic/signInLogin.dart';
 import 'package:uber/constant/constants.dart';
@@ -93,5 +94,11 @@ class MobileAuthService {
             ),
             (route) => false,
           );
+  }
+
+  checkUser(BuildContext context) async{
+    bool userIsRegistered = await ProfileDataCrudService.checkForRegisteredUser(context);
+    if(userIsRegistered == true){
+
   }
 }
